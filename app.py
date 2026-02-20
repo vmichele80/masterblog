@@ -1,6 +1,14 @@
-# Copied the code structure from Codio
 
-from flask import Flask
+import os
+import json
+from flask import Flask, current_app
+
+def load_blog_posts():
+    data_path = os.path.join(current_app.instance_path, "blog_posts.json")
+
+    with open(data_path, "r") as f:
+        return json.load(f)
+
 
 app = Flask(__name__)
 

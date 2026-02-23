@@ -2,6 +2,8 @@
 
 import os
 import json
+
+
 from flask import Flask, request, render_template, redirect, url_for
 
 def get_data_path():
@@ -76,11 +78,32 @@ def add():
 
         # and now I save it in the original json
         save_posts(blog_posts)
-        ...
+
         return redirect(url_for('index'))
 
     # this is what you get if the request is a GET
     return render_template('add.html')
+
+@app.route('/delete/<int:post_id>', methods=["POST"])
+def delete_post(post_id):
+    # Find the blog post with the given id and remove it from the list
+    # Redirect back to the home page
+
+    # retrieve all the blogposts
+    blog_posts = load_blog_posts()
+
+    # Remove the post with matching id by creating a new list without it
+    updated_posts = [p for p in blog_posts if p.get("id") != post_id]
+
+    # We overwrite the list of posts
+    save_posts(updated_posts)
+
+    #once done we reload the index.hmtl page and post is deleted:
+    return redirect(url_for("index"))
+
+
+
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

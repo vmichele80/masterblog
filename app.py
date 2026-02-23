@@ -36,7 +36,15 @@ def load_blog_posts():
         except json.JSONDecodeError:
             return []
 
+def get_post_by_id(post_id):
+    """load the blog posts in a list of dictionaries"""
+    blog_posts = load_blog_posts()
 
+    for post in blog_posts:
+        if post.get("id") == post_id:
+            return post
+
+    return None  # if not found
 
 
 app = Flask(__name__)
@@ -101,7 +109,25 @@ def delete_post(post_id):
     #once done we reload the index.hmtl page and post is deleted:
     return redirect(url_for("index"))
 
+@app.route('/update/<int:post_id>', methods=['GET', 'POST'])
+def update_post(post_id):
+    # Fetch the blog posts from the JSON file
+    post = get_post_by_id(post_id)
+    if post is None:
+        # Post not found
+        return "Post not found", 404
 
+    if request.method == 'POST':
+        # Update the post in the JSON file
+        # Redirect back to index
+        pass
+
+    else:
+        # Else, it's a GET request
+        # So display the update.html page
+        pass
+
+    return render_template('update.html', post=post)
 
 
 

@@ -17,6 +17,9 @@
             <form method="POST" action="{{ url_for('delete_post', post_id=post.id) }}">
                 <button type="submit">Delete Post</button>
             </form>
+            <form method="POST" action="{{ url_for('update_post', post_id=post.id) }}">
+                <button type="submit">Update Post</button>
+            </form>
         </div>
     {% else %}
         <p>No posts yet.</p>

@@ -41,8 +41,9 @@ app = Flask(__name__)
 
 
 @app.route('/')
-def hello_world():
-    return 'Hello, World!'
+def index():
+    blog_posts = load_blog_posts()
+    return render_template('index.html', posts=blog_posts)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():

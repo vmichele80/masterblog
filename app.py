@@ -36,9 +36,8 @@ def load_blog_posts():
         except json.JSONDecodeError:
             return []
 
-def get_post_by_id(post_id):
-    """load the blog posts in a list of dictionaries"""
-    blog_posts = load_blog_posts()
+def get_post_by_id(blog_posts,post_id):
+    """load a specific post in a list of dictionaries"""
 
     for post in blog_posts:
         if post.get("id") == post_id:
@@ -112,23 +111,37 @@ def delete_post(post_id):
 @app.route('/update/<int:post_id>', methods=['GET', 'POST'])
 def update_post(post_id):
     # Fetch the blog posts from the JSON file
-    post = get_post_by_id(post_id)
+    blog_posts = load_blog_posts() # this loads the full list of posts
+    post = get_post_by_id(blog_posts,post_id) # this is the post to modify
     if post is None:
         # Post not found
         return "Post not found", 404
 
     if request.method == 'POST':
+
+        # Get updated values from the form
+        author = request.form.get("author", "").strip()
+        title = request.form.get("title", "").strip()
+        content = request.form.get("content", "").strip()
+
+        # Update the post
+        post["author"] = author
+        post["title"] = title
+        post["content"] = content
+
         # Update the post in the JSON file
+        save_posts(blog_posts)
+
         # Redirect back to index
-        pass
+        return redirect(url_for('index'))
 
     else:
         # Else, it's a GET request
         # So display the update.html page
+        # This is kinda useless, but was given within the codio assignment
         pass
 
     return render_template('update.html', post=post)
-
 
 
 if __name__ == '__main__':
